@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on 16 February 2016
-@author: Vanessa
+Author: Vanessa Gómez Verdejo (http://vanessa.webs.tsc.uc3m.es/)
+Updated: 27/02/2017 (working with sklearn 0.18.1)
 """
 
 import numpy as np
@@ -30,7 +30,7 @@ class mva:
     >>> from lib.mva import mva
     >>> CCA = mva('CCA', 10)
     >>> CCA.fit(X, Y, reg= 1e-3)
-    >>> X_t = cca.transform(X, Y)
+    >>> X_t = cca.transform(X)
     """
     __algorithm = None
     __n_components = 2
@@ -86,8 +86,10 @@ class mva:
 
         # Checking whitenning of the data
         X_t = self.transform(X)
-        AA = np.dot(X_t.T, X_t) / N
-        if np.mean(np.abs(np.eye(self.__n_components)-AA)) > 1e-3:
+        AA = np.dot(X_t.T, X_t) / N      
+        AAideal = np.diag(D[:self.__n_components])
+        
+        if np.mean(np.abs(AAideal -AA)) > 1e-3:
             print 'Data are ill-conditioned, please increase the value of the regularization parameter'
 
 
